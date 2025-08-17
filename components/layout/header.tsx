@@ -22,6 +22,7 @@ interface NavigationItem {
 }
 
 const navigationItems: NavigationItem[] = [
+  { label: 'Find Print Shops', href: '/directory' },
   { label: 'Browse Content', href: '/browse', roles: ['customer'] },
   { label: 'Upload Content', href: '/creator/upload', roles: ['creator'] },
   { label: 'Shop Dashboard', href: '/shop/dashboard', roles: ['printShop'] },
