@@ -18,7 +18,10 @@
       "Bash(npm test)",
       "Bash(git add:*)",
       "Bash(gh:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git commit:*)",
+      "mcp__shadcn__get_component"
     ],
     "defaultMode": "acceptEdits"
   }
