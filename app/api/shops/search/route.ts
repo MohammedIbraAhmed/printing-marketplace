@@ -190,6 +190,7 @@ export async function GET(request: NextRequest) {
         'profile.businessInfo.description': 1,
         'profile.businessInfo.logo': 1,
         'profile.location.address': 1,
+        'profile.location.coordinates': 1,
         'profile.location.serviceRadius': 1,
         'profile.location.pickupAvailable': 1,
         'profile.location.deliveryAvailable': 1,
@@ -221,6 +222,7 @@ export async function GET(request: NextRequest) {
       logo: shop.profile?.businessInfo?.logo || null,
       location: {
         address: shop.profile?.location?.address || {},
+        coordinates: shop.profile?.location?.coordinates || undefined,
         serviceRadius: shop.profile?.location?.serviceRadius || 25,
         pickupAvailable: shop.profile?.location?.pickupAvailable || true,
         deliveryAvailable: shop.profile?.location?.deliveryAvailable || false,

@@ -4,12 +4,14 @@ import { useState, useEffect, useCallback } from 'react'
 import { SearchBar } from '@/components/directory/search-bar'
 import { FilterSidebar } from '@/components/directory/filter-sidebar'
 import { ShopCard } from '@/components/directory/shop-card'
+import { MapView } from '@/components/directory/map-view'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { 
   Grid3X3, 
   List, 
+  Map,
   Loader2, 
   AlertCircle,
   MapPin,
@@ -29,6 +31,10 @@ interface Shop {
       city?: string
       state?: string
       zipCode?: string
+    }
+    coordinates?: {
+      latitude: number
+      longitude: number
     }
     serviceRadius?: number
     pickupAvailable?: boolean
@@ -81,7 +87,7 @@ export default function DirectoryPage() {
   const [shops, setShops] = useState<Shop[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [view, setView] = useState<'grid' | 'list'>('grid')
+  const [view, setView] = useState<'grid' | 'list' | 'map'>('grid')
   const [showFilters, setShowFilters] = useState(false)
   const [pagination, setPagination] = useState({
     total: 0,
@@ -285,7 +291,7 @@ export default function DirectoryPage() {
                     variant={view === 'grid' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setView('grid')}
-                    className="rounded-r-none"
+                    className="rounded-r-none border-r"
                   >
                     <Grid3X3 className="h-4 w-4" />
                   </Button>
@@ -293,9 +299,17 @@ export default function DirectoryPage() {
                     variant={view === 'list' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setView('list')}
-                    className="rounded-l-none"
+                    className="rounded-none border-r"
                   >
                     <List className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={view === 'map' ? 'default' : 'ghost'}
+                    size="sm"
+                    onClick={() => setView('map')}
+                    className="rounded-l-none"
+                  >
+                    <Map className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -380,26 +394,44 @@ export default function DirectoryPage() {
               </Card>
             )}
 
-            {/* Results Grid/List */}
+            {/* Results Grid/List/Map */}
             {shops.length > 0 && (
               <>
-                <div className={
-                  view === 'grid' 
-                    ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' 
-                    : 'space-y-4'
-                }>
-                  {shops.map((shop) => (
-                    <ShopCard
-                      key={shop.id}
-                      shop={shop}
-                      view={view}
-                      showDistance={!!filters.location}
+                {view === 'map' ? (
+                  <div className="h-[600px] rounded-lg overflow-hidden border">
+                    <MapView
+                      shops={shops}
+                      userLocation={filters.location ? {
+                        latitude: filters.location.latitude,
+                        longitude: filters.location.longitude,
+                        address: filters.location.address || 'Your Location'
+                      } : undefined}
+                      searchRadius={filters.location?.radius || 25}
+                      onShopSelect={(shopId) => {
+                        // Navigate to shop detail page
+                        window.open(`/directory/${shopId}`, '_blank')
+                      }}
                     />
-                  ))}
-                </div>
+                  </div>
+                ) : (
+                  <div className={
+                    view === 'grid' 
+                      ? 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6' 
+                      : 'space-y-4'
+                  }>
+                    {shops.map((shop) => (
+                      <ShopCard
+                        key={shop.id}
+                        shop={shop}
+                        view={view}
+                        showDistance={!!filters.location}
+                      />
+                    ))}
+                  </div>
+                )}
 
-                {/* Load More */}
-                {pagination.hasNext && (
+                {/* Load More - Only show for grid/list views */}
+                {view !== 'map' && pagination.hasNext && (
                   <div className="mt-8 text-center">
                     <Button 
                       onClick={handleLoadMore}
@@ -416,7 +448,11 @@ export default function DirectoryPage() {
 
                 {/* Results Summary */}
                 <div className="mt-8 text-center text-sm text-gray-600">
-                  Showing {shops.length} of {pagination.total} print shops
+                  {view === 'map' ? (
+                    `${shops.length} print shops shown on map`
+                  ) : (
+                    `Showing ${shops.length} of ${pagination.total} print shops`
+                  )}
                 </div>
               </>
             )}
