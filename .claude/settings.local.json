@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__sequential-thinking__sequentialthinking",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "WebSearch",
+      "WebSearch",
+      "Bash(md-tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx create-next-app:*)",
+      "Bash(npx:*)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm test)",
+      "Bash(git add:*)",
+      "Bash(gh:*)",
+      "Bash(git push:*)",
+      "Bash(git pull:*)",
+      "Bash(git commit:*)",
+      "mcp__shadcn__get_component",
+      "Bash(npm run dev:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}
