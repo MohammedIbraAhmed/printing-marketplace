@@ -22,8 +22,13 @@
       "Bash(git pull:*)",
       "Bash(git commit:*)",
       "mcp__shadcn__get_component",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(touch:*)",
+      "Bash(npm run build:*)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [
+      "D:\\d\\Js\\print"
+    ]
   }
 }
