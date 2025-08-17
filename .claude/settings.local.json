@@ -21,7 +21,8 @@
       "Bash(git push:*)",
       "Bash(git pull:*)",
       "Bash(git commit:*)",
-      "mcp__shadcn__get_component"
+      "mcp__shadcn__get_component",
+      "Bash(npm run dev:*)"
     ],
     "defaultMode": "acceptEdits"
   }
