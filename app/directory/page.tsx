@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/directory/search-bar'
 import { FilterSidebar } from '@/components/directory/filter-sidebar'
 import { ShopCard } from '@/components/directory/shop-card'
 import { MapView } from '@/components/directory/map-view'
+import { LocationPermission } from '@/components/directory/location-permission'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -237,6 +238,13 @@ export default function DirectoryPage() {
             isLoading={loading}
           />
         </div>
+
+        {/* Location Permission Banner */}
+        {!filters.location && (
+          <div className="mb-8">
+            <LocationPermission />
+          </div>
+        )}
 
         <div className="flex gap-8">
           
