@@ -44,6 +44,47 @@ const NotificationPreferencesSchema = new Schema(
   { _id: false }
 )
 
+const PrivacySettingsSchema = new Schema(
+  {
+    profileVisibility: { 
+      type: String, 
+      enum: ['public', 'business-only', 'private'], 
+      default: 'public' 
+    },
+    showEmail: { type: Boolean, default: false },
+    showPhone: { type: Boolean, default: false },
+    allowDataSharing: { type: Boolean, default: false },
+    allowMarketingEmails: { type: Boolean, default: false },
+    allowAnalytics: { type: Boolean, default: true },
+  },
+  { _id: false }
+)
+
+const ConsentPreferencesSchema = new Schema(
+  {
+    essential: { type: Boolean, default: true },
+    analytics: { type: Boolean, default: false },
+    marketing: { type: Boolean, default: false },
+    thirdParty: { type: Boolean, default: false },
+    communications: { type: Boolean, default: false },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { _id: false }
+)
+
+const DataUsageConsentSchema = new Schema(
+  {
+    profileData: { type: Boolean, default: true },
+    activityTracking: { type: Boolean, default: false },
+    communicationHistory: { type: Boolean, default: true },
+    fileUploads: { type: Boolean, default: true },
+    behavioralAnalytics: { type: Boolean, default: false },
+    thirdPartySharing: { type: Boolean, default: false },
+    marketingAnalytics: { type: Boolean, default: false },
+  },
+  { _id: false }
+)
+
 const PreferencesSchema = new Schema(
   {
     notifications: {
@@ -62,6 +103,10 @@ const UserSchema = new Schema<User>(
       unique: true,
       lowercase: true,
       trim: true,
+    },
+    password: {
+      type: String,
+      select: false, // Don't include password in queries by default
     },
     name: {
       type: String,
@@ -83,6 +128,32 @@ const UserSchema = new Schema<User>(
     preferences: {
       type: PreferencesSchema,
       default: () => ({}),
+    },
+    privacy: {
+      type: PrivacySettingsSchema,
+      default: () => ({}),
+    },
+    consent: {
+      type: ConsentPreferencesSchema,
+      default: () => ({}),
+    },
+    dataUsageConsent: {
+      type: DataUsageConsentSchema,
+      default: () => ({}),
+    },
+    status: {
+      type: String,
+      enum: ['active', 'deactivated', 'suspended'],
+      default: 'active',
+    },
+    deactivatedAt: {
+      type: Date,
+    },
+    deactivationReason: {
+      type: String,
+    },
+    lastLogin: {
+      type: Date,
     },
   },
   {
