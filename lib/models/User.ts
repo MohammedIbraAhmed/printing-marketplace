@@ -63,6 +63,10 @@ const UserSchema = new Schema<User>(
       lowercase: true,
       trim: true,
     },
+    password: {
+      type: String,
+      select: false, // Don't include password in queries by default
+    },
     name: {
       type: String,
       trim: true,

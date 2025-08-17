@@ -11,6 +11,7 @@ export interface Address {
 export interface User {
   _id: ObjectId
   email: string
+  password?: string
   name?: string
   image?: string
   role: 'customer' | 'creator' | 'printShop' | 'admin'
