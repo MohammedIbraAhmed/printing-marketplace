@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function getRecipients(criteria: any): Promise<Array<{ email: string; name: string; role: string; id: string }>> {
-  let query: any = {}
+  const query: any = {}
 
   switch (criteria.type) {
     case 'all':

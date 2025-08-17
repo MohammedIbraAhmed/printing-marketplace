@@ -12,10 +12,12 @@ import {
   User, 
   AlertCircle, 
   CheckCircle,
-  Loader2 
+  Loader2,
+  Crop
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
+import { ImageCropper } from './image-cropper'
 
 interface ProfileImageUploadProps {
   currentImageUrl?: string | null
@@ -35,6 +37,8 @@ export function ProfileImageUpload({
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [showCropper, setShowCropper] = useState(false)
+  const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const validateFile = (file: File): string | null => {
@@ -64,18 +68,17 @@ export function ProfileImageUpload({
       return
     }
 
-    // Create preview
+    // Create preview for cropping
     const reader = new FileReader()
     reader.onload = (e) => {
-      setPreviewUrl(e.target?.result as string)
+      const imageUrl = e.target?.result as string
+      setSelectedImageUrl(imageUrl)
+      setShowCropper(true)
     }
     reader.readAsDataURL(file)
-
-    // Upload file
-    await uploadFile(file)
   }, [])
 
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: File | Blob, fileName?: string) => {
     setIsUploading(true)
     setUploadProgress(0)
 
@@ -87,8 +90,8 @@ export function ProfileImageUpload({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          fileName: file.name,
-          fileType: file.type,
+          fileName: fileName || (file instanceof File ? file.name : 'cropped-profile-image.jpg'),
+          fileType: file.type || 'image/jpeg',
           fileSize: file.size,
         }),
       })
@@ -178,8 +181,37 @@ export function ProfileImageUpload({
     }
   }
 
+  const handleCropComplete = async (croppedImageBlob: Blob) => {
+    setShowCropper(false)
+    setSelectedImageUrl(null)
+    
+    // Create preview from cropped blob
+    const croppedUrl = URL.createObjectURL(croppedImageBlob)
+    setPreviewUrl(croppedUrl)
+    
+    // Upload the cropped image
+    await uploadFile(croppedImageBlob, 'profile-image.jpg')
+  }
+
+  const handleCropCancel = () => {
+    setShowCropper(false)
+    setSelectedImageUrl(null)
+    setError(null)
+  }
+
   return (
     <div className={cn('space-y-4', className)}>
+      {/* Image Cropper Modal */}
+      {showCropper && selectedImageUrl && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+          <ImageCropper
+            imageUrl={selectedImageUrl}
+            onCropComplete={handleCropComplete}
+            onCancel={handleCropCancel}
+          />
+        </div>
+      )}
+
       {error && (
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
@@ -286,6 +318,20 @@ export function ProfileImageUpload({
                 <Camera className="w-4 h-4" />
                 Choose Photo
               </Button>
+              {previewUrl && (
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedImageUrl(previewUrl)
+                    setShowCropper(true)
+                  }}
+                  disabled={isLoading || isUploading}
+                  className="flex items-center gap-2"
+                >
+                  <Crop className="w-4 h-4" />
+                  Crop Image
+                </Button>
+              )}
             </div>
 
             {/* Help Text */}

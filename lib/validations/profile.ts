@@ -155,6 +155,28 @@ export const privacySettingsSchema = z.object({
   allowAnalytics: z.boolean()
 })
 
+// Consent management validation schemas
+export const consentPreferencesSchema = z.object({
+  essential: z.boolean().default(true), // Required for basic functionality
+  analytics: z.boolean(),
+  marketing: z.boolean(),
+  thirdParty: z.boolean(),
+  location: z.boolean().optional(),
+  communications: z.boolean(),
+  updatedAt: z.date().optional()
+})
+
+export const dataUsageConsentSchema = z.object({
+  profileData: z.boolean(),
+  activityTracking: z.boolean(),
+  communicationHistory: z.boolean(),
+  fileUploads: z.boolean(),
+  locationData: z.boolean().optional(),
+  behavioralAnalytics: z.boolean(),
+  thirdPartySharing: z.boolean(),
+  marketingAnalytics: z.boolean()
+})
+
 // Profile image upload validation
 export const profileImageSchema = z.object({
   fileName: z.string().min(1, "File name is required"),
@@ -188,4 +210,6 @@ export type AdminProfile = z.infer<typeof adminProfileSchema>
 export type PasswordChangeData = z.infer<typeof passwordChangeSchema>
 export type NotificationPreferences = z.infer<typeof notificationPreferencesSchema>
 export type PrivacySettings = z.infer<typeof privacySettingsSchema>
+export type ConsentPreferences = z.infer<typeof consentPreferencesSchema>
+export type DataUsageConsent = z.infer<typeof dataUsageConsentSchema>
 export type ProfileImageData = z.infer<typeof profileImageSchema>

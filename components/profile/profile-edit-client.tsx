@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CustomerProfileForm } from './customer-profile-form'
 import { CreatorProfileForm } from './creator-profile-form'
+import { PrintShopProfileForm } from './printshop-profile-form'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { AlertTriangle } from 'lucide-react'
-import type { CustomerProfile, CreatorProfile } from '@/lib/validations/profile'
+import type { CustomerProfile, CreatorProfile, PrintShopProfile } from '@/lib/validations/profile'
 
 interface ProfileEditClientProps {
   user: {
@@ -24,7 +25,7 @@ export function ProfileEditClient({ user }: ProfileEditClientProps) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const handleSave = async (data: CustomerProfile | CreatorProfile) => {
+  const handleSave = async (data: CustomerProfile | CreatorProfile | PrintShopProfile) => {
     setIsLoading(true)
     
     try {
@@ -76,19 +77,11 @@ export function ProfileEditClient({ user }: ProfileEditClientProps) {
       
       case 'printShop':
         return (
-          <Card>
-            <CardHeader>
-              <CardTitle>Print Shop Profile</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Alert>
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  Print Shop profile editing is coming soon. For now, please contact support to update your business information.
-                </AlertDescription>
-              </Alert>
-            </CardContent>
-          </Card>
+          <PrintShopProfileForm
+            user={user}
+            onSave={handleSave as (data: PrintShopProfile) => Promise<void>}
+            isLoading={isLoading}
+          />
         )
       
       case 'admin':
